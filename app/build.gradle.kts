@@ -35,7 +35,13 @@ dependencies {
 
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.activity)
+    implementation(libs.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("com.squareup.picasso:picasso:2.71828")
+    implementation("org.jsoup:jsoup:1.14.3")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
 }
