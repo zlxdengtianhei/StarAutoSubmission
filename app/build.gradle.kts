@@ -44,4 +44,7 @@ dependencies {
     implementation("com.squareup.picasso:picasso:2.71828")
     implementation("org.jsoup:jsoup:1.14.3")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    implementation("jp.wasabeef:glide-transformations:4.3.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 }
