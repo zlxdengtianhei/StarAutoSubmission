@@ -1,5 +1,4 @@
 package com.example.starautosubmission;
-import com.example.starautosubmission.R;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,15 +25,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobUser;
+
 public class MainActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private BottomNavigationView bottomNavigationView;
     private static final String IMAGE_URL_KEY = "daily_image_url";
+    private static final String PREFS_NAME = "LoginPrefs";
+    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // 检查用户是否登录
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false);
+
+        if (!isLoggedIn) {
+            // 如果没有用户登录，跳转到登录界面
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish(); // 关闭当前活动
+            return; // 结束 onCreate 方法
+        }
+
         setContentView(R.layout.activity_main);
 
         viewPager = findViewById(R.id.viewPager);
