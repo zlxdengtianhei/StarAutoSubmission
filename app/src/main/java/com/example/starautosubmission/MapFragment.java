@@ -162,7 +162,7 @@ public class MapFragment extends Fragment {
 
 
     private void searchOne(String c, String l){
-        if(c.equals("")){
+        if(c.isEmpty()){
             c = "中国";
         }
         mPoiSearch.searchInCity(new PoiCitySearchOption().city(c).keyword(l));
