@@ -20,19 +20,27 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+    packagingOptions {
+        exclude("META-INF/NOTICE.md")
+        exclude("META-INF/LICENSE.md")
+        exclude("META-INF/LICENSE")
+        exclude("META-INF/LICENSE.txt")
+        exclude("META-INF/NOTICE")
+    }
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -47,14 +55,14 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.12.0")
     implementation("jp.wasabeef:glide-transformations:4.3.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
-<<<<<<<<< Temporary merge branch 1
-=========
 
-    implementation ("io.github.bmob:android-sdk:3.9.4")
-    implementation ("io.reactivex.rxjava2:rxjava:2.2.8")
-    implementation ("io.reactivex.rxjava2:rxandroid:2.1.1")
-    implementation ("com.squareup.okhttp3:okhttp:4.8.1")
-    implementation ("com.squareup.okio:okio:2.2.2")
-    implementation ("com.google.code.gson:gson:2.8.5")
->>>>>>>>> Temporary merge branch 2
+    implementation("io.github.bmob:android-sdk:3.9.4")
+    implementation("io.reactivex.rxjava2:rxjava:2.2.8")
+    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
+    implementation("com.squareup.okhttp3:okhttp:4.8.1")
+    implementation("com.squareup.okio:okio:2.2.2")
+    implementation("com.google.code.gson:gson:2.8.5")
+
+    implementation("com.sun.mail:android-mail:1.6.7")
+    implementation("com.sun.mail:android-activation:1.6.7")
 }
