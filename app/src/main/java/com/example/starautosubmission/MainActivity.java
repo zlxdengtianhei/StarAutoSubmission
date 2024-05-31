@@ -25,8 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.BmobUser;
-
 public class MainActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager;
@@ -65,10 +63,13 @@ public class MainActivity extends AppCompatActivity {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
         fragments.add(new MapFragment());
-        fragments.add(new ProfileFragment());
+        fragments.add(new ImageRecognitionFragment());
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(this, fragments);
         viewPager.setAdapter(adapter);
+
+        // 禁用滑动
+        viewPager.setUserInputEnabled(false);
 
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                         bottomNavigationView.setSelectedItemId(R.id.nav_map);
                         break;
                     case 2:
-                        bottomNavigationView.setSelectedItemId(R.id.nav_profile);
+                        bottomNavigationView.setSelectedItemId(R.id.nav_image_description);
                         break;
                 }
             }
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (itemId == R.id.nav_map) {
                     viewPager.setCurrentItem(1);
                     return true;
-                } else if (itemId == R.id.nav_profile) {
+                } else if (itemId == R.id.nav_image_description) { // 修改图标名称
                     viewPager.setCurrentItem(2);
                     return true;
                 }

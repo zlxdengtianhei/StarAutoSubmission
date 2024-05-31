@@ -1,11 +1,15 @@
 package com.example.starautosubmission;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -24,9 +28,12 @@ public class HomeFragment extends Fragment {
     private SlidingImageView image;
     private ImageView backgroundImage;
     private Button submitButton;
+    private Button viewHistoryButton;
+    private WebView webView;
+    private Button closeWebViewButton;
+    private View webViewContainer;
 
     public HomeFragment() {
-        // Required empty public constructor
     }
 
     public static HomeFragment newInstance(String param1, String param2) {
@@ -50,7 +57,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -61,8 +67,11 @@ public class HomeFragment extends Fragment {
         image = view.findViewById(R.id.image);
         backgroundImage = view.findViewById(R.id.background_image);
         submitButton = view.findViewById(R.id.submit_button);
+        viewHistoryButton = view.findViewById(R.id.view_history_button);
+        webView = view.findViewById(R.id.webview);
+        closeWebViewButton = view.findViewById(R.id.close_webview_button);
+        webViewContainer = view.findViewById(R.id.webview_container);
 
-        // Load cached image URL and display it
         String imageUrl = MainActivity.getCachedImageUrl(getContext());
         if (imageUrl != null) {
             image.loadImage(imageUrl);
@@ -73,18 +82,52 @@ public class HomeFragment extends Fragment {
                     .into(backgroundImage);
         }
 
-        // Set onClickListener for the image view to open a web page
+        // Configure WebView
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return false;
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                webViewContainer.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+            }
+        });
+        webView.getSettings().setJavaScriptEnabled(true);
+
         image.setOnClickListener(v -> openWebPage("https://apod.nasa.gov/apod/astropix.html"));
 
-        // Set onClickListener for the submit button to navigate to the submission page
+        viewHistoryButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://apod.nasa.gov/apod/archivepixFull.html"));
+            startActivity(intent);
+        });
+
         submitButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), SubmissionActivity.class);
             startActivity(intent);
         });
+
+        closeWebViewButton.setOnClickListener(v -> {
+            closeWebView();
+        });
     }
 
     private void openWebPage(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(intent);
+        webView.loadUrl(url);
+        webViewContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void closeWebView() {
+        webView.loadUrl("about:blank"); // Clear the WebView content
+        webView.clearHistory();
+        webView.clearCache(true);
+        webViewContainer.setVisibility(View.GONE);
     }
 }
