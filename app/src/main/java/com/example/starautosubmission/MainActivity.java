@@ -75,14 +75,7 @@ public class MainActivity extends AppCompatActivity {
         requestNotificationPermission();
         NotificationScheduler.scheduleDailyReminder(this);
 
-        // 添加按钮点击事件
-        Button buttonSendNotification = findViewById(R.id.button_send_notification);
-        buttonSendNotification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendImmediateNotification();
-            }
-        });
+
     }
 
     private void requestNotificationPermission() {
@@ -196,37 +189,5 @@ public class MainActivity extends AppCompatActivity {
         return sharedPreferences.getString(IMAGE_URL_KEY, null);
     }
 
-    private void sendImmediateNotification() {
-        createNotificationChannel();
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification) // 确保这个图标存在
-                .setContentTitle("投稿提醒")
-                .setContentText("请记得今日投稿")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            notificationManager.notify(1002, builder.build());
-        } else {
-            Toast.makeText(this, "未授予通知权限，无法发送提醒", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Immediate Notification Channel";
-            String description = "Channel for immediate notifications";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
 }
