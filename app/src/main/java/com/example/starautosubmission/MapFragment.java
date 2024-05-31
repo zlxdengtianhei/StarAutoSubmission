@@ -91,11 +91,6 @@ public class MapFragment extends Fragment {
         if (getArguments() != null) {
             locationList = getArguments().getStringArray(ARG_PARAM1);
         }
-        Context appContext = requireActivity().getApplicationContext();
-        SDKInitializer.setAgreePrivacy(appContext, true);
-
-        // 初始化
-        initPOI();
     }
 
     @Override
