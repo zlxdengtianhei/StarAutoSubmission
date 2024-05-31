@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class HomeFragment extends Fragment {
+
+    private static final String TAG = "HomeFragment";
 
     private SlidingImageView image;
     private ImageView backgroundImage;
@@ -92,12 +95,16 @@ public class HomeFragment extends Fragment {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                webViewContainer.setVisibility(View.VISIBLE);
+                Log.d(TAG, "onPageStarted: url = " + url);
+                if (!url.equals("about:blank")) {
+                    webViewContainer.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                Log.d(TAG, "onPageFinished: url = " + url);
             }
         });
         webView.getSettings().setJavaScriptEnabled(true);
@@ -120,11 +127,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void openWebPage(String url) {
+        Log.d(TAG, "openWebPage: url = " + url);
         webView.loadUrl(url);
         webViewContainer.setVisibility(View.VISIBLE);
     }
 
     private void closeWebView() {
+        Log.d(TAG, "closeWebView called");
+        webView.stopLoading();
         webView.loadUrl("about:blank"); // Clear the WebView content
         webView.clearHistory();
         webView.clearCache(true);

@@ -93,8 +93,6 @@ public class MapFragment extends Fragment {
         }
         Context appContext = requireActivity().getApplicationContext();
         SDKInitializer.setAgreePrivacy(appContext, true);
-        SDKInitializer.initialize(getActivity().getApplicationContext());
-        SDKInitializer.setCoordType(CoordType.BD09LL);
 
         // 初始化
         initPOI();
