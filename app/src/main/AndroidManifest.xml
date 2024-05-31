@@ -10,6 +10,7 @@
     <!--获取wifi网络状态的信息 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!--获取sd卡写的权限，用于文件上传和下载-->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--允许读取手机状态 用于创建BmobInstallation-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -48,6 +49,14 @@
             android:name="cn.bmob.v3.util.BmobContentProvider"
             android:authorities="com.example.starautosubmission.BmobContentProvider">
         </provider>
+        <receiver android:name=".NotificationReceiver" />
+        <receiver android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
