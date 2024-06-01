@@ -18,24 +18,28 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
 
 public class StepTwoFragment extends Fragment {
 
     private static final String TAG = "StepTwoFragment";
+    private static final String PREFS_NAME = "SubmissionPrefs";
+    private static final String LOCATION_LIST_KEY = "location_list";
 
     private EditText etTitle, etDescription, etLocation, etDate, etAperture, etShutter, etIso, etOthers;
     private Spinner spinnerCamera, spinnerLens;
-    private Button btnNextStep;
+    private Button btnNextStep, btnSaveLocation;
 
     @Nullable
     @Override
@@ -53,6 +57,7 @@ public class StepTwoFragment extends Fragment {
         spinnerCamera = view.findViewById(R.id.spinner_camera);
         spinnerLens = view.findViewById(R.id.spinner_lens);
         btnNextStep = view.findViewById(R.id.btn_save_info);
+        btnSaveLocation = view.findViewById(R.id.btn_save_location);
 
         // Load cameras and lenses from the server
         loadDevicesFromServer();
@@ -67,6 +72,16 @@ public class StepTwoFragment extends Fragment {
             }
         });
 
+        btnSaveLocation.setOnClickListener(v -> {
+            String location = etLocation.getText().toString().trim();
+            if (!location.isEmpty()) {
+                saveLocation(location);
+                uploadLocationToServer(location);
+            } else {
+                Toast.makeText(getContext(), "请输入地点名称", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return view;
     }
 
@@ -78,7 +93,7 @@ public class StepTwoFragment extends Fragment {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 getContext(),
-                (view, year1, month1, dayOfMonth) -> etDate.setText(year1 + "-" + (month1 + 1) + "-" + dayOfMonth),
+                (view, year1, month1, dayOfMonth) -> etDate.setText(year1 + "年" + (month1 + 1) + "月" + dayOfMonth+ "日"),
                 year, month, day);
         datePickerDialog.show();
     }
@@ -171,7 +186,7 @@ public class StepTwoFragment extends Fragment {
             String others = etOthers.getText().toString().trim();
 
             // Save submission info locally or to database
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("SubmissionPrefs", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("title", title);
             editor.putString("description", description);
@@ -189,5 +204,32 @@ public class StepTwoFragment extends Fragment {
         } catch (Exception e) {
             Log.e(TAG, "Error saving submission info", e);
         }
+    }
+
+    private void saveLocation(String location) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Set<String> locationSet = sharedPreferences.getStringSet(LOCATION_LIST_KEY, new HashSet<>());
+        locationSet.add(location);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putStringSet(LOCATION_LIST_KEY, locationSet);
+        editor.apply();
+        Toast.makeText(getContext(), "地名已保存", Toast.LENGTH_SHORT).show();
+    }
+
+    private void uploadLocationToServer(String location) {
+        LocationEntry locationEntry = new LocationEntry();
+        locationEntry.setLocationName(location);
+        locationEntry.setUser(BmobUser.getCurrentUser(BmobUser.class));
+
+        locationEntry.save(new SaveListener<String>() {
+            @Override
+            public void done(String objectId, BmobException e) {
+                if (e == null) {
+                    Log.d(TAG, "Location uploaded successfully with id: " + objectId);
+                } else {
+                    Log.e(TAG, "Error uploading location: " + e.getMessage());
+                }
+            }
+        });
     }
 }

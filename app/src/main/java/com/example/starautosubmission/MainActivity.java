@@ -45,6 +45,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobUser;
+
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
@@ -190,8 +192,6 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(MainActivity.this, MyDevicesActivity.class);
             } else if (itemId == R.id.nav_about) {
                 intent = new Intent(MainActivity.this, AboutActivity.class);
-            } else if (itemId == R.id.nav_settings) {
-                intent = new Intent(MainActivity.this, SettingsActivity.class);
             }
             if (intent != null) {
                 startActivity(intent);
@@ -202,9 +202,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
     }
-
-
-
 
     private void fetchDailyImage() {
         new FetchImageTask(this).execute("https://apod.nasa.gov/apod/astropix.html");
@@ -247,6 +244,4 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getString(IMAGE_URL_KEY, null);
     }
-
-
 }
