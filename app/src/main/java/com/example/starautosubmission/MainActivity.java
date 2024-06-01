@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.Toast;
 import android.view.View;
@@ -175,9 +176,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             } else if (itemId == R.id.nav_map) {
                 viewPager.setCurrentItem(1);
-                return true;
-            } else if (itemId == R.id.nav_profile) {
-                viewPager.setCurrentItem(2);
                 return true;
             }
             return false;
