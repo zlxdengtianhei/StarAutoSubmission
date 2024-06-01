@@ -193,6 +193,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_about) {
                 intent = new Intent(MainActivity.this, AboutActivity.class);
             }
+            else if (itemId == R.id.nav_settings) {
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
+            }
             if (intent != null) {
                 startActivity(intent);
             } else {
@@ -244,4 +247,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getString(IMAGE_URL_KEY, null);
     }
+
+
 }
