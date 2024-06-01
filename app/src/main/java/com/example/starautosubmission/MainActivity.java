@@ -12,7 +12,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
+import android.widget.Toast;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -198,6 +203,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
+
     private void fetchDailyImage() {
         new FetchImageTask(this).execute("https://apod.nasa.gov/apod/astropix.html");
     }
@@ -227,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
-                SharedPreferences sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString(IMAGE_URL_KEY, result);
                 editor.apply();
@@ -236,7 +244,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static String getCachedImageUrl(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getString(IMAGE_URL_KEY, null);
     }
+
+
 }
