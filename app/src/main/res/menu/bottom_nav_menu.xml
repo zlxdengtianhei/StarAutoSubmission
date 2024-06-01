@@ -8,5 +8,4 @@
         android:id="@+id/nav_map"
         android:icon="@drawable/map"
         android:title="Map" />
-
 </menu>

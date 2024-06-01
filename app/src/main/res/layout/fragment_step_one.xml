@@ -4,21 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:id="@+id/fragment_step_one">
+    android:id="@+id/fragment_step_one"
+    android:background="@drawable/submission">
+
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="选择图片"
-        android:src="@drawable/choose_pic"
+        android:src="@drawable/add_pic2"
         android:layout_gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintHeight_percent="0.5" />
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintHeight_percent="0.6" />
+
 
     <Button
         android:id="@+id/changeImageButton"

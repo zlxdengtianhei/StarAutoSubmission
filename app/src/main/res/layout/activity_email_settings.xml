@@ -2,42 +2,62 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/setting">
 
-    <Spinner
-        android:id="@+id/spinner_email_service"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/email_services" />
+        android:layout_gravity="center"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="#88FFFFFF">
 
-    <EditText
-        android:id="@+id/et_sender_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="发件人"
-        android:inputType="textEmailAddress"
-        android:layout_marginTop="16dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <EditText
-        android:id="@+id/et_email_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="授权码或密码"
-        android:inputType="textPassword"
-        android:layout_marginTop="16dp" />
+        <Spinner
+            android:id="@+id/spinner_email_service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/email_services" />
 
-    <CheckBox
-        android:id="@+id/checkbox_primary_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="主邮箱"
-        android:layout_marginTop="16dp" />
+        <EditText
+            android:id="@+id/et_sender_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="发件人"
+            android:inputType="textEmailAddress"
+            android:layout_marginTop="16dp" />
 
-    <Button
-        android:id="@+id/btn_save_email_settings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="保存"
-        android:layout_marginTop="24dp" />
+        <EditText
+            android:id="@+id/et_email_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="授权码或密码"
+            android:inputType="textPassword"
+            android:layout_marginTop="16dp" />
+
+        <CheckBox
+            android:id="@+id/checkbox_primary_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主邮箱"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btn_save_email_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="保存"
+            android:layout_marginTop="24dp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 </LinearLayout>
