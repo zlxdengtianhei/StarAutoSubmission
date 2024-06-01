@@ -1,4 +1,5 @@
 package com.example.starautosubmission;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -8,11 +9,11 @@ import java.util.List;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
 
-    private final List<Fragment> fragmentList;
+    private List<Fragment> fragmentList;
 
-    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity, List<Fragment> fragmentList) {
+    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity, List<Fragment> fragments) {
         super(fragmentActivity);
-        this.fragmentList = fragmentList;
+        this.fragmentList = fragments;
     }
 
     @NonNull
@@ -24,5 +25,9 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public int getItemCount() {
         return fragmentList.size();
+    }
+
+    public Fragment getFragment(int position) {
+        return fragmentList.get(position);
     }
 }

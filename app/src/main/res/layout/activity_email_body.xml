@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/et_csva_greeting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="CSVA邮件敬语"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/et_csva_closing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="CSVA邮件结语"
+            android:inputType="text"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/et_ykzg_greeting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="夜空中国邮件敬语"
+            android:inputType="text"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/et_ykzg_closing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="夜空中国邮件结语"
+            android:inputType="text"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/et_gov_greeting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="中国国家天文邮件敬语"
+            android:inputType="text"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/et_gov_closing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="中国国家天文邮件结语"
+            android:inputType="text"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/et_bj_greeting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="北京天文馆邮件敬语"
+            android:inputType="text"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/et_bj_closing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="北京天文馆邮件结语"
+            android:inputType="text"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btn_save_email_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="保存"
+            android:layout_marginTop="24dp" />
+    </LinearLayout>
+</ScrollView>

@@ -12,23 +12,29 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
+import android.widget.Toast;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.squareup.picasso.Picasso;
+import com.google.android.material.navigation.NavigationView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -40,8 +46,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private DrawerLayout drawerLayout;
     private ViewPager2 viewPager;
     private BottomNavigationView bottomNavigationView;
+    private NavigationView navigationView;
+    private ImageButton menuButton;
     private static final String IMAGE_URL_KEY = "daily_image_url";
     private static final String PREFS_NAME = "LoginPrefs";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
@@ -53,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // 检查用户是否登录
-        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false);
 
         if (!isLoggedIn) {
@@ -66,11 +75,23 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        drawerLayout = findViewById(R.id.drawerLayout);
         viewPager = findViewById(R.id.viewPager);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        navigationView = findViewById(R.id.navigationView);
+        menuButton = findViewById(R.id.menuButton);
+
+        menuButton.setOnClickListener(v -> {
+            if (drawerLayout.isDrawerOpen(navigationView)) {
+                drawerLayout.closeDrawer(navigationView);
+            } else {
+                drawerLayout.openDrawer(navigationView);
+            }
+        });
 
         setupViewPager();
         setupBottomNavigationView();
+        setupNavigationView();
         fetchDailyImage();
         requestNotificationPermission();
         NotificationScheduler.scheduleDailyReminder(this);
@@ -117,6 +138,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                if (position == 0) {
+                    menuButton.setVisibility(View.VISIBLE);
+                    HomeFragment homeFragment = (HomeFragment) adapter.getFragment(position);
+                    // 确保 Fragment 的视图已经创建
+                    if (homeFragment.getView() != null) {
+                        View submitButton = homeFragment.getView().findViewById(R.id.submit_button);
+                        if (submitButton != null) {
+                            submitButton.setOnClickListener(v -> {
+                                Intent intent = new Intent(MainActivity.this, SubmissionActivity.class);
+                                startActivity(intent);
+                            });
+                        }
+                    }
+                } else {
+                    menuButton.setVisibility(View.GONE);
+                }
                 switch (position) {
                     case 0:
                         bottomNavigationView.setSelectedItemId(R.id.nav_home);
@@ -131,21 +168,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigationView() {
-        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.nav_home) {
-                    viewPager.setCurrentItem(0);
-                    return true;
-                } else if (itemId == R.id.nav_map) {
-                    viewPager.setCurrentItem(1);
-                    return true;
-                }
-                return false;
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                viewPager.setCurrentItem(0);
+                return true;
+            } else if (itemId == R.id.nav_map) {
+                viewPager.setCurrentItem(1);
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                viewPager.setCurrentItem(2);
+                return true;
             }
+            return false;
         });
     }
+
+    private void setupNavigationView() {
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            Intent intent = null;
+            if (itemId == R.id.nav_my_devices) {
+                intent = new Intent(MainActivity.this, MyDevicesActivity.class);
+            } else if (itemId == R.id.nav_about) {
+                intent = new Intent(MainActivity.this, AboutActivity.class);
+            } else if (itemId == R.id.nav_settings) {
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
+            }
+            if (intent != null) {
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "未实现的选项", Toast.LENGTH_SHORT).show();
+            }
+            drawerLayout.closeDrawers();
+            return true;
+        });
+    }
+
+
+
 
     private void fetchDailyImage() {
         new FetchImageTask(this).execute("https://apod.nasa.gov/apod/astropix.html");
