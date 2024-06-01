@@ -17,6 +17,8 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Existing UI elements -->
+
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
@@ -149,10 +151,17 @@
                 android:layout_marginTop="8dp" />
 
             <Button
+                android:id="@+id/btn_save_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="保存地名"
+                android:layout_marginTop="16dp" />
+
+            <Button
                 android:id="@+id/btn_save_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="保存"
+                android:text="保存设置"
                 android:layout_marginTop="16dp" />
 
         </LinearLayout>

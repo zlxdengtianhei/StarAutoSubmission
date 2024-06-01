@@ -1,9 +1,16 @@
 package com.example.starautosubmission;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +20,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -41,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String IMAGE_URL_KEY = "daily_image_url";
     private static final String PREFS_NAME = "LoginPrefs";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+    private static final int REQUEST_NOTIFICATION_PERMISSION = 1;
+    private static final String CHANNEL_ID = "immediate_notification_channel";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,16 +91,46 @@ public class MainActivity extends AppCompatActivity {
         setupBottomNavigationView();
         setupNavigationView();
         fetchDailyImage();
+        requestNotificationPermission();
+        NotificationScheduler.scheduleDailyReminder(this);
+
+
+    }
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13 and above
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 权限被授予
+                NotificationScheduler.scheduleDailyReminder(this);
+            } else {
+                // 权限被拒绝
+                // 可以显示一条消息，告知用户需要权限才能发送通知
+                Toast.makeText(this, "通知权限被拒绝，无法发送通知", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void setupViewPager() {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
         fragments.add(new MapFragment());
-        fragments.add(new ProfileFragment());
+
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(this, fragments);
         viewPager.setAdapter(adapter);
+
+        // 禁用滑动
+        viewPager.setUserInputEnabled(false);
 
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -116,9 +159,7 @@ public class MainActivity extends AppCompatActivity {
                     case 1:
                         bottomNavigationView.setSelectedItemId(R.id.nav_map);
                         break;
-                    case 2:
-                        bottomNavigationView.setSelectedItemId(R.id.nav_profile);
-                        break;
+
                 }
             }
         });
@@ -133,9 +174,6 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_map) {
                 viewPager.setCurrentItem(1);
                 return true;
-            } else if (itemId == R.id.nav_profile) {
-                viewPager.setCurrentItem(2);
-                return true;
             }
             return false;
         });
@@ -149,8 +187,6 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(MainActivity.this, MyDevicesActivity.class);
             } else if (itemId == R.id.nav_about) {
                 intent = new Intent(MainActivity.this, AboutActivity.class);
-            } else if (itemId == R.id.nav_settings) {
-                intent = new Intent(MainActivity.this, SettingsActivity.class);
             }
             if (intent != null) {
                 startActivity(intent);
