@@ -59,6 +59,7 @@ public class MapFragment extends Fragment {
     RecyclerView searchResult;
     InfoAdapter searchAdapter;
     Button addButton;
+    Spinner spinner;
 
     // 百度地图相关
     PoiSearch mPoiSearch;
@@ -109,11 +110,7 @@ public class MapFragment extends Fragment {
         addAllMarkerFromCloudServer();
 
         // Spinner
-        Spinner spinner = view.findViewById(R.id.spinner);
         fetchCurrentUserLocations();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, locationList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
 
         // EditText
         editCity = (EditText) view.findViewById(R.id.city);
@@ -194,23 +191,6 @@ public class MapFragment extends Fragment {
 
     private void addAllMarkerFromCloudServer(){
         // 在地图上显示所有用户的标点
-    }
-
-    public class LocationEntry extends BmobObject {
-        private String locationName;
-        private BmobUser user;
-        public String getLocationName() {
-            return locationName;
-        }
-        public void setLocationName(String locationName) {
-            this.locationName = locationName;
-        }
-        public BmobUser getUser() {
-            return user;
-        }
-        public void setUser(BmobUser user) {
-            this.user = user;
-        }
     }
 
     public void fetchCurrentUserLocations() {
