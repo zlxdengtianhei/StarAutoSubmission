@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Spinner
+        android:id="@+id/spinner_email_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/email_services" />
+
+    <EditText
+        android:id="@+id/et_sender_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="发件人"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/et_email_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="授权码或密码"
+        android:inputType="textPassword"
+        android:layout_marginTop="16dp" />
+
+    <CheckBox
+        android:id="@+id/checkbox_primary_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="主邮箱"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btn_save_email_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="保存"
+        android:layout_marginTop="24dp" />
+</LinearLayout>

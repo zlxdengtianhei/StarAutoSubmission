@@ -3,8 +3,24 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_submission">SubmissionActivity</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
     <string name="image_desc">描述图片的内容</string>
     <string name="location_map">Location</string>
     <string name="add_point">Add</string>
     <string name="city_hint">输入城市，匹配更精确</string>
+    <string-array name="device_types">
+        <item>相机</item>
+        <item>镜头</item>
+        <item>赤道仪</item>
+        <item>其他</item>
+    </string-array>
+    <string-array name="email_services">
+        <item>QQ</item>
+        <item>GMail</item>
+        <item>Outlook</item>
+        <item>163</item>
+        <item>126</item>
+        <item>其他</item>
+    </string-array>
 </resources>

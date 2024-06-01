@@ -14,6 +14,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--允许读取手机状态 用于创建BmobInstallation-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".MyApp"
@@ -32,19 +35,22 @@
         <activity
             android:name=".SubmissionActivity"
             android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+        <activity android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".RegisterActivity"
             android:exported="true"/>
         <activity
             android:name=".LoginActivity"
             android:exported="true" />
+        <activity android:name=".MyDevicesActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".AboutActivity" />
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
             android:authorities="com.example.starautosubmission.BmobContentProvider">

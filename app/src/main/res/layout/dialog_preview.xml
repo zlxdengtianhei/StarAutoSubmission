@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_receiver_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="收件人"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tv_subject"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="主题"
+            app:layout_constraintTop_toBottomOf="@id/tv_receiver_email"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tv_attachment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="附件名"
+            app:layout_constraintTop_toBottomOf="@id/tv_subject"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_email_greeting"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="邮件敬语，可为空"
+            app:layout_constraintTop_toBottomOf="@id/tv_attachment"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_email_body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="邮件内容"
+            app:layout_constraintTop_toBottomOf="@id/et_email_greeting"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_email_closing"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="邮件结语，可为空"
+            app:layout_constraintTop_toBottomOf="@id/et_email_body"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="8dp" />
+
+        <CheckBox
+            android:id="@+id/cb_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试（勾选表示忽略收件人，用测试邮箱作为收件人）"
+            app:layout_constraintTop_toBottomOf="@id/et_email_closing"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_test_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="测试收件人"
+            app:layout_constraintTop_toBottomOf="@id/cb_test"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送"
+            app:layout_constraintTop_toBottomOf="@id/et_test_email"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
