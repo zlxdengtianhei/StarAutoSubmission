@@ -35,6 +35,12 @@ import com.baidu.mapapi.search.poi.PoiSearch;
 
 import java.util.List;
 
+import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MapFragment#newInstance} factory method to
@@ -42,14 +48,8 @@ import java.util.List;
  */
 public class MapFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "StringList";
-
-    // TODO: Rename and change types of parameters
-
     // 搜索参数
-    private String[] locationList = {"内蒙古明安图","河北冰山梁","内蒙古乌兰布统","内蒙古上都湖","河北千松坝"};
+    private List<String> locationList;
     private String location;
     private String city;
 
@@ -70,18 +70,9 @@ public class MapFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @return A new instance of fragment MapFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MapFragment newInstance(String param1) {
+    public static MapFragment newInstance() {
         MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -90,8 +81,9 @@ public class MapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            locationList = getArguments().getStringArray(ARG_PARAM1);
+
         }
+
     }
 
     @Override
@@ -114,9 +106,11 @@ public class MapFragment extends Fragment {
             }
         });
         initPOI();
+        addAllMarkerFromCloudServer();
 
         // Spinner
         Spinner spinner = view.findViewById(R.id.spinner);
+        fetchCurrentUserLocations();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, locationList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -194,6 +188,49 @@ public class MapFragment extends Fragment {
             @Override
             public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
 
+            }
+        });
+    }
+
+    private void addAllMarkerFromCloudServer(){
+        // 在地图上显示所有用户的标点
+    }
+
+    public class LocationEntry extends BmobObject {
+        private String locationName;
+        private BmobUser user;
+        public String getLocationName() {
+            return locationName;
+        }
+        public void setLocationName(String locationName) {
+            this.locationName = locationName;
+        }
+        public BmobUser getUser() {
+            return user;
+        }
+        public void setUser(BmobUser user) {
+            this.user = user;
+        }
+    }
+
+    public void fetchCurrentUserLocations() {
+        BmobQuery<LocationEntry> query = new BmobQuery<>();
+        query.addWhereEqualTo("user",
+                BmobUser.getCurrentUser(BmobUser.class));
+        query.findObjects(new FindListener<LocationEntry>() {
+            @Override
+            public void done(List<LocationEntry> object,
+                             BmobException e) {
+                if (e == null) {
+                    // 查询成功
+                    Log.d("Bmob","get data successfully");
+                    for (LocationEntry l : object) {
+                        locationList.add(l.getLocationName());
+                    }
+                } else {
+                    // 查询失败
+                    Log.e("Bmob", "Error: " + e.getMessage());
+                }
             }
         });
     }
