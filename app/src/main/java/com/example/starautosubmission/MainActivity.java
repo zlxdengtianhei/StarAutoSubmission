@@ -193,6 +193,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_about) {
                 intent = new Intent(MainActivity.this, AboutActivity.class);
             }
+            else if (itemId == R.id.nav_settings) {
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
+            }
             if (intent != null) {
                 startActivity(intent);
             } else {
