@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_NOTIFICATION_PERMISSION = 1;
     private static final String CHANNEL_ID = "immediate_notification_channel";
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,19 +196,56 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(MainActivity.this, MyDevicesActivity.class);
             } else if (itemId == R.id.nav_about) {
                 intent = new Intent(MainActivity.this, AboutActivity.class);
-            }
-            else if (itemId == R.id.nav_settings) {
+            } else if (itemId == R.id.nav_settings) {
                 intent = new Intent(MainActivity.this, SettingsActivity.class);
+            } else if (itemId == R.id.nav_remind_submission) {
+                sendSubmissionReminder();
             }
             if (intent != null) {
                 startActivity(intent);
-            } else {
-                Toast.makeText(this, "未实现的选项", Toast.LENGTH_SHORT).show();
             }
             drawerLayout.closeDrawers();
             return true;
         });
     }
+
+    private void sendSubmissionReminder() {
+        // 创建通知渠道（仅适用于 Android 8.0 及以上版本）
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Immediate Reminder Channel";
+            String description = "Channel for immediate reminders";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+
+        // 创建点击通知时打开的 Intent
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // 创建通知
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification) // 确保这个图标存在
+                .setContentTitle("投稿提醒")
+                .setContentText("请记得今日投稿")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        try {
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(1002, builder.build());
+            Toast.makeText(this, "提醒已发送", Toast.LENGTH_SHORT).show();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "未授予通知权限，无法发送提醒", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 
 
@@ -239,14 +278,17 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
             if (result != null) {
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString(IMAGE_URL_KEY, result);
-                editor.apply();
+            } else {
+                editor.remove(IMAGE_URL_KEY); // 清除旧的图像URL
             }
+            editor.apply();
         }
     }
+
 
     public static String getCachedImageUrl(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);

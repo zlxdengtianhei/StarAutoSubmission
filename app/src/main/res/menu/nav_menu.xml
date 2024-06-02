@@ -13,5 +13,9 @@
         android:id="@+id/nav_about"
         android:icon="@drawable/ic_about"
         android:title="关于" />
+    <item
+        android:id="@+id/nav_remind_submission"
+        android:icon="@drawable/ic_notification"
+        android:title="提醒投稿" />
 
 </menu>

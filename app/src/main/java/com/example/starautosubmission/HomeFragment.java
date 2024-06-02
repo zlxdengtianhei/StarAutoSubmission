@@ -48,6 +48,7 @@ public class HomeFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +82,14 @@ public class HomeFragment extends Fragment {
             // Use Glide to load the background image with blur transformation
             Glide.with(this)
                     .load(imageUrl)
+                    .transform(new MultiTransformation<>(new CenterCrop(), new BlurTransformation(25)))
+                    .into(backgroundImage);
+        } else {
+            // Load default image if no NASA image is available
+            int defaultImageResourceId = R.drawable.default_image; // Ensure this drawable exists
+            image.loadDefaultImage(defaultImageResourceId);
+            Glide.with(this)
+                    .load(defaultImageResourceId)
                     .transform(new MultiTransformation<>(new CenterCrop(), new BlurTransformation(25)))
                     .into(backgroundImage);
         }
@@ -126,6 +135,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+
     private void openWebPage(String url) {
         Log.d(TAG, "openWebPage: url = " + url);
         webView.loadUrl(url);
@@ -140,4 +150,6 @@ public class HomeFragment extends Fragment {
         webView.clearCache(true);
         webViewContainer.setVisibility(View.GONE);
     }
+
+
 }

@@ -86,4 +86,19 @@ public class SlidingImageView extends AppCompatImageView {
             canvas.drawBitmap(bitmap, -translateX, 0, paint);
         }
     }
+
+    public void loadDefaultImage(int resourceId) {
+        Glide.with(getContext())
+                .asBitmap()
+                .load(resourceId)
+                .into(new BitmapImageViewTarget(this) {
+                    @Override
+                    public void onResourceReady(Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        super.onResourceReady(resource, transition);
+                        bitmap = resource;
+                        startSliding();
+                    }
+                });
+    }
+
 }
