@@ -1,5 +1,6 @@
 package com.example.starautosubmission;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,13 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder>{
 
@@ -56,7 +62,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 int position = holder.getAdapterPosition();
                 RecyclerView searchResult = (RecyclerView) parent.findViewById(R.id.searchResult);
                 searchResult.setVisibility(View.GONE);
-                //定义Marker坐标点，在地图上标记出来，然后
+                //定义Marker坐标点，在地图上标记出来
                 BitmapDescriptor bitmap = BitmapDescriptorFactory
                         .fromResource(R.drawable.ic_marker);
                 PoiInfo info = InfoList.get(position);
@@ -68,6 +74,8 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 mBaiduMap.addOverlay(option);
                 MapStatusUpdate status1 = MapStatusUpdateFactory.newLatLng(point);
                 mBaiduMap.animateMapStatus(status1, 500);
+                // 把点的信息存到云服务器
+                saveInfo(info);
             }
         });
         return holder;
@@ -83,5 +91,21 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
     @Override
     public int getItemCount() {
         return InfoList.size();
+    }
+
+    private void saveInfo(PoiInfo info) {
+        CoordinateEntry coordinate = new CoordinateEntry();
+        coordinate.setLatLng(info.getLocation());
+        coordinate.setUser(BmobUser.getCurrentUser());
+        coordinate.save(new SaveListener<String>() {
+            @Override
+            public void done(String objectId, BmobException e) {
+                if (e == null) {
+                    Log.d("Bmob","Add a coordinate successfully");
+                } else {
+                    Log.e("Bmob", e.toString());
+                }
+            }
+        });
     }
 }

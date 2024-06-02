@@ -17,12 +17,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
@@ -41,6 +44,8 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -142,7 +147,38 @@ public class MapFragment extends Fragment {
             //默认返回false
             @Override
             public boolean onMarkerClick(Marker marker) {
-                marker.remove();
+
+                // 悬浮窗
+                LatLng position = marker.getPosition();
+                View infoWindowView = LayoutInflater.from(getContext()).inflate(R.layout.marker_info, null);
+                InfoWindow infoWindow = new InfoWindow(infoWindowView, position, -100);
+
+                // 设置悬浮窗文本
+                TextView marker_info = (TextView) infoWindowView.findViewById(R.id.text_marker_info);
+                String positionInfo = marker.getPosition().latitude + "," + marker.getPosition().longitude;
+                marker_info.setText(positionInfo);
+
+                // 显示悬浮窗
+                mBaiduMap.showInfoWindow(infoWindow);
+
+                // 设置悬浮窗的点击监听器，点击时隐藏悬浮窗
+                infoWindowView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mBaiduMap.hideInfoWindow();
+                    }
+                });
+
+                Button deleteMarker = (Button) infoWindowView.findViewById(R.id.button_delete_marker);
+                deleteMarker.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LatLng p = marker.getPosition();
+                        getOneThenRemove(p,marker);
+                        mBaiduMap.hideInfoWindow();
+                    }
+                });
+
                 return true;
             }
         });
@@ -215,6 +251,29 @@ public class MapFragment extends Fragment {
                 } else {
                     // 查询失败
                     Log.e("Bmob", "Error: " + e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void getOneThenRemove(LatLng ll,Marker marker) {
+        BmobQuery<CoordinateEntry> bmobQuery = new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("user",BmobUser.getCurrentUser()).addWhereEqualTo("latitude", ll.latitude).addWhereEqualTo("longitude",ll.longitude);
+        bmobQuery.findObjects(new FindListener<CoordinateEntry>() {
+            @Override
+            public void done(List<CoordinateEntry> list, BmobException e) {
+                if (e == null) {
+                    Log.d("Bmob","search successfully");
+                    for(CoordinateEntry c : list){
+                        c.delete(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                marker.remove();
+                            }
+                        });
+                    }
+                } else {
+                    Log.e("Bmob", e.toString());
                 }
             }
         });

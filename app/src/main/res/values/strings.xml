@@ -7,8 +7,9 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="image_desc">描述图片的内容</string>
     <string name="location_map">Location</string>
-    <string name="add_point">Add</string>
+    <string name="add_point">添加标点</string>
     <string name="city_hint">输入城市，匹配更精确</string>
+    <string name="delete_marker">删除</string>
     <string-array name="device_types">
         <item>相机</item>
         <item>镜头</item>
