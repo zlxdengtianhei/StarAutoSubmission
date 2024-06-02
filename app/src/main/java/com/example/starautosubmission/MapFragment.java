@@ -33,6 +33,7 @@ import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobObject;
@@ -49,7 +50,7 @@ import cn.bmob.v3.listener.FindListener;
 public class MapFragment extends Fragment {
 
     // 搜索参数
-    private List<String> locationList;
+    private List<String> locationList = new ArrayList<>();
     private String location;
     private String city;
 
@@ -110,6 +111,7 @@ public class MapFragment extends Fragment {
         addAllMarkerFromCloudServer();
 
         // Spinner
+        spinner = view.findViewById(R.id.spinner);
         fetchCurrentUserLocations();
 
         // EditText
@@ -207,6 +209,9 @@ public class MapFragment extends Fragment {
                     for (LocationEntry l : object) {
                         locationList.add(l.getLocationName());
                     }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, locationList);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(adapter);
                 } else {
                     // 查询失败
                     Log.e("Bmob", "Error: " + e.getMessage());
