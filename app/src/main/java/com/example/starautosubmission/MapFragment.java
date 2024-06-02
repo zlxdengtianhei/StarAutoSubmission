@@ -1,6 +1,5 @@
 package com.example.starautosubmission;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,20 +10,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.baidu.mapapi.CoordType;
-import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
@@ -39,12 +43,10 @@ import com.baidu.mapapi.search.poi.PoiSearch;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 /**
@@ -66,6 +68,7 @@ public class MapFragment extends Fragment {
     InfoAdapter searchAdapter;
     Button addButton;
     Spinner spinner;
+    Button modeSwitchButton;
 
     // 百度地图相关
     PoiSearch mPoiSearch;
@@ -87,10 +90,6 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-
     }
 
     @Override
@@ -113,7 +112,6 @@ public class MapFragment extends Fragment {
             }
         });
         initPOI();
-        addAllMarkerFromCloudServer();
 
         // Spinner
         spinner = view.findViewById(R.id.spinner);
@@ -182,6 +180,14 @@ public class MapFragment extends Fragment {
                 return true;
             }
         });
+
+        modeSwitchButton = (Button) view.findViewById(R.id.button_switch_mode);
+        modeSwitchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopupMenu(v);
+            }
+        });
     }
 
 
@@ -227,8 +233,34 @@ public class MapFragment extends Fragment {
         });
     }
 
-    private void addAllMarkerFromCloudServer(){
-        // 在地图上显示所有用户的标点
+
+
+    private void showPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
+        popupMenu.getMenuInflater().inflate(R.menu.show_mode_menu, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if(id == R.id.show_all){
+                    modeSwitchButton.setText("显示全部");
+                    addAllMarkerFromCloudServer();
+                    return true;
+                } else if (id == R.id.hide_all) {
+                    modeSwitchButton.setText("全部隐藏");
+                    mBaiduMap.clear();
+                    return true;
+                }else if (id == R.id.show_personal){
+                    modeSwitchButton.setText("显示个人");
+                    addUserMarkerFromCloudServer();
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+        });
+        popupMenu.show();
     }
 
     public void fetchCurrentUserLocations() {
@@ -268,10 +300,70 @@ public class MapFragment extends Fragment {
                         c.delete(new UpdateListener() {
                             @Override
                             public void done(BmobException e) {
-                                marker.remove();
+                                if(e == null){
+                                    marker.remove();
+                                }
                             }
                         });
                     }
+                } else {
+                    Toast.makeText(getContext(), "无权删除此点", Toast.LENGTH_SHORT).show();
+                    Log.e("Bmob", e.toString());
+                }
+            }
+        });
+    }
+
+    private void addAllMarkerFromCloudServer(){
+        // 先全部清除
+        mBaiduMap.clear();
+        // 获取当前用户的全部标点
+        BmobQuery<CoordinateEntry> bmobQuery = new BmobQuery<>();
+        bmobQuery.findObjects(new FindListener<CoordinateEntry>() {
+            @Override
+            public void done(List<CoordinateEntry> list, BmobException e) {
+                if (e == null) {
+                    Log.d("Bmob","search successfully");
+                    List<OverlayOptions> options = new ArrayList<OverlayOptions>();
+                    BitmapDescriptor bitmap = BitmapDescriptorFactory
+                            .fromResource(R.drawable.ic_marker);
+                    for(CoordinateEntry c : list){
+                        LatLng l = c.getLatLng();
+                        options.add(new MarkerOptions()
+                                .position(l)
+                                .icon(bitmap)
+                        );
+                    }
+                    mBaiduMap.addOverlays(options);
+                } else {
+                    Log.e("Bmob", e.toString());
+                }
+            }
+        });
+    }
+
+    private void addUserMarkerFromCloudServer(){
+        // 先全部清除
+        mBaiduMap.clear();
+        // 获取当前用户的全部标点
+        BmobQuery<CoordinateEntry> bmobQuery = new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("user",BmobUser.getCurrentUser());
+        bmobQuery.findObjects(new FindListener<CoordinateEntry>() {
+            @Override
+            public void done(List<CoordinateEntry> list, BmobException e) {
+                if (e == null) {
+                    Log.d("Bmob","search successfully");
+                    List<OverlayOptions> options = new ArrayList<OverlayOptions>();
+                    BitmapDescriptor bitmap = BitmapDescriptorFactory
+                            .fromResource(R.drawable.ic_marker);
+                    for(CoordinateEntry c : list){
+                        LatLng l = c.getLatLng();
+                        options.add(new MarkerOptions()
+                                .position(l)
+                                .icon(bitmap)
+                        );
+                    }
+                    mBaiduMap.addOverlays(options);
                 } else {
                     Log.e("Bmob", e.toString());
                 }
@@ -279,3 +371,4 @@ public class MapFragment extends Fragment {
         });
     }
 }
+

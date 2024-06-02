@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/show_all"
+        android:title="显示全部" />
+
+    <item
+        android:id="@+id/hide_all"
+        android:title="全部隐藏" />
+
+    <item
+        android:id="@+id/show_personal"
+        android:title="显示个人" />
+
+</menu>
