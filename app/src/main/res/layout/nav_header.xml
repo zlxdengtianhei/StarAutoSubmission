@@ -3,14 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
-    android:background="@drawable/black">
+    android:padding="16dp"
+    android:background="@color/material_dynamic_neutral80">
 
     <ImageView
         android:id="@+id/user_avatar"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_gravity="center"
         android:src="@drawable/user_head" />
 
     <TextView
@@ -19,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="Android Studio"
+        android:text="猎光者"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
@@ -28,6 +27,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="android.studio@android.com"
+        android:text="猎光的点点滴滴，都历历在目"
         android:textColor="@android:color/black" />
 </LinearLayout>

@@ -1,9 +1,13 @@
 package com.example.starautosubmission;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +23,7 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -273,7 +278,7 @@ public class MapFragment extends Fragment {
                              BmobException e) {
                 if (e == null) {
                     // 查询成功
-                    Log.d("Bmob","get data successfully");
+                    Log.d("Bmob", "get data successfully");
                     for (LocationEntry l : object) {
                         locationList.add(l.getLocationName());
                     }

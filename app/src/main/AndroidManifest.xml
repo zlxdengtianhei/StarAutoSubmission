@@ -15,15 +15,19 @@
     <!--允许读取手机状态 用于创建BmobInstallation-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:name=".MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/star"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/star"
         android:supportsRtl="true"
         android:theme="@style/Theme.StarAutoSubmission"
         tools:targetApi="31">
@@ -32,23 +36,31 @@
             android:value="psOQANcnnBYnf6zMP9KL9UElQVAM5t0N" />
         <activity
             android:name=".SubmissionActivity"
+            android:theme="@style/AppTheme.FullScreen"
             android:exported="false" />
         <activity android:name=".SplashActivity"
+            android:theme="@style/AppTheme.FullScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme.FullScreen"/>
         <activity android:name=".RegisterActivity"
+            android:theme="@style/AppTheme.FullScreen"
             android:exported="true"/>
         <activity
             android:name=".LoginActivity"
+            android:theme="@style/AppTheme.FullScreen"
             android:exported="true" />
-        <activity android:name=".MyDevicesActivity" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".AboutActivity" />
+        <activity android:name=".MyDevicesActivity"
+            android:theme="@style/AppTheme.FullScreen"/>
+        <activity android:name=".SettingsActivity"
+            android:theme="@style/AppTheme.FullScreen"/>
+        <activity android:name=".AboutActivity"
+            android:theme="@style/AppTheme.FullScreen"/>
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
             android:authorities="com.example.starautosubmission.BmobContentProvider">
