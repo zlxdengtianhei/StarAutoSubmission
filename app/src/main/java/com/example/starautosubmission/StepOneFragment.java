@@ -41,7 +41,6 @@ public class StepOneFragment extends Fragment {
 
         sharedPreferences = getActivity().getSharedPreferences("ImagePrefs", Context.MODE_PRIVATE);
 
-        // Load saved image URI if exists
         String savedUriString = sharedPreferences.getString("imageUri", null);
         if (savedUriString != null) {
             imageUri = Uri.parse(savedUriString);

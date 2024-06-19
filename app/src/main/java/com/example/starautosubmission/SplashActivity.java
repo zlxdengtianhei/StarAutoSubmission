@@ -19,21 +19,17 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 隐藏状态栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_splash);
 
-        // 加载自定义字体
+        // 加载自定义字体并设置
         Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/stzhongs.ttf");
-
-        // 获取TextView并设置字体
         TextView splashText = findViewById(R.id.splash_text);
         splashText.setTypeface(customFont);
 
-        // 延时跳转到主界面
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

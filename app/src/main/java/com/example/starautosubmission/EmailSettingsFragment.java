@@ -43,8 +43,6 @@ public class EmailSettingsFragment extends Fragment {
         String emailPassword = etEmailPassword.getText().toString().trim();
         boolean isPrimaryEmail = checkboxPrimaryEmail.isChecked();
 
-        // Save the information to Bmob or locally
-        // Example: save to SharedPreferences (for simplicity)
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("EmailPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("emailService", emailService);

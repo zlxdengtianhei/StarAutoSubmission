@@ -59,7 +59,6 @@ public class StepTwoFragment extends Fragment {
         btnNextStep = view.findViewById(R.id.btn_save_info);
         btnSaveLocation = view.findViewById(R.id.btn_save_location);
 
-        // Load cameras and lenses from the server
         loadDevicesFromServer();
 
         etDate.setOnClickListener(v -> showDatePickerDialog());
@@ -185,7 +184,6 @@ public class StepTwoFragment extends Fragment {
             String iso = etIso.getText().toString().trim();
             String others = etOthers.getText().toString().trim();
 
-            // Save submission info locally or to database
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("title", title);

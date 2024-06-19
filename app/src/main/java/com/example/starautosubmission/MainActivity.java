@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // 创建点击通知时打开的 Intent
+        // 创建点击通知Intent
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 

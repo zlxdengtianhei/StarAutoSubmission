@@ -47,8 +47,6 @@ public class EmailBodyFragment extends Fragment {
         String bjGreeting = etBjGreeting.getText().toString().trim();
         String bjClosing = etBjClosing.getText().toString().trim();
 
-        // Save the information to Bmob or locally
-        // Example: save to SharedPreferences (for simplicity)
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("EmailBodyPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("csvaGreeting", csvaGreeting);
