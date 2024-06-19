@@ -120,7 +120,6 @@ public class MapFragment extends Fragment {
 
         // Spinner
         spinner = view.findViewById(R.id.spinner);
-        fetchCurrentUserLocations();
 
         // EditText
         editCity = (EditText) view.findViewById(R.id.city);
@@ -195,6 +194,11 @@ public class MapFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchCurrentUserLocations();
+    }
 
     private void searchOne(String c, String l){
         if(c.isEmpty()){
